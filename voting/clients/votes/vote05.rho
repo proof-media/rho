@@ -1,0 +1,8 @@
+
+new ack, log(`rho:io:stdout`) in {
+  for (@msg <= ack) { log!("Received ACK: " ++ msg) }
+  |
+  @["Proof", "CastVote"]!("user005", "true", *ack)
+  |
+  @["Proof", "CastVote"]!("user005", "true", *ack)
+}

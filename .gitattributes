@@ -1,0 +1,2 @@
+# https://github.com/github/linguist#overrides
+*.rho linguist-language=Scala

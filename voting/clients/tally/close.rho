@@ -1,6 +1,0 @@
-
-new log(`rho:io:stdout`) in {
-  @["Proof", "TallyVote"]!(Nil)
-  |
-  log!("Submitting a request to close the vote")
-}

@@ -1,9 +1,0 @@
-
-new res, log(`rho:io:stdout`) in
-{
-  for (@msg <= res) {
-    log!(["Results from vote: ", msg])
-  }
-  |
-  @["Proof", "VoteResults"]!(*res)
-}

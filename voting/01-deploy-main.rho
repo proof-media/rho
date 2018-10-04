@@ -1,0 +1,105 @@
+
+// we want to deploy a different version
+// on RCHAIN TestNet but not clashing public names
+// NOTE: this will be solved by Name Registry
+contract @["Proof:deploy"](@self, @version) = {
+
+  // define all that is needed in this block
+  new closedVoteFlag, votersSet, votesMapStore, stdout(`rho:io:stdout`), log in {
+
+    contract log(@string) = {
+      stdout!("[PROOF - v" ++ version ++ "] " ++ string)
+    }
+    |
+    log!("Deploying main voting contracts *** ^_^/  ") |
+
+    //////////////////////
+    // INIT
+
+    // List of identifiers for users accepted for voting
+    votersSet!!(
+      Set("user001", "user002", "user003")
+    )
+    |
+    // Storing votes in this HashMap
+    votesMapStore!({})
+    |
+    // Flag used to check if vote is still open
+    closedVoteFlag!(false) // accepting votes at startup
+    |
+
+    //////////////////////
+    // CONTRACTs
+
+    // Contract called to set the status and block voting
+    contract @["Proof", self, "TallyVote"](@arg) = {
+      log!("Tallying the vote") |
+      for (@isClosed <- closedVoteFlag) {
+        closedVoteFlag!(true)
+      }
+    }
+    |
+    // Contract to send results/'proofs' back
+    // but only if voting is closed
+    contract @["Proof", self, "VoteResults"](sendResults) = {
+      //TODO: make this public name an argument
+      for (@isClosed <- closedVoteFlag) {
+        closedVoteFlag!(isClosed) |
+        if (isClosed) {
+          for (@voteMap <- votesMapStore) {
+            votesMapStore!(voteMap) |
+            sendResults!(voteMap)
+          }
+        } else{
+          log!("vote still open")
+        }
+      }
+    }
+    |
+    // Contract that receives votes and check:
+    // - if voting is closed (when TallyVote is called)
+    // - if vote is valid (meaning from a valid/accepted user)
+    // - if they is a double vote (same valid users tried to vote more than once)
+    contract @["Proof", self, "CastVote"](@userId, @vote, ack) = {
+
+      for (@isClosed <- closedVoteFlag) {
+
+        closedVoteFlag!(isClosed) |
+
+        // WHEN VOTE IS CLOSE
+        if (isClosed) {
+          log!("NOT accepting votes anymore: " ++ userId)
+
+        // WHEN VOTE IS OPEN
+        } else{
+
+          log!("<- request: " ++ userId) |
+          for (@voter <- votersSet)
+          {
+            if (voter.contains(userId)) {
+              for (@voteMap <- votesMapStore)
+              {
+                if (voteMap.contains(userId)) {
+                  votesMapStore!(voteMap) |
+                  log!("-> " ++ userId ++ " already voted")
+                } else {
+                  log!("-> " ++ userId ++ " valid (" ++ vote ++ ")") |
+                  votesMapStore!(voteMap.set(userId, vote)) |
+                  ack!(userId ++ " ack")
+                }
+              }
+            } else {
+              log!("-> " ++ userId ++ " invalid")
+            }
+
+          }
+        }
+      }
+    }
+
+  }
+
+}
+
+|
+@["Proof:deploy"]!("versionName", "0.1")

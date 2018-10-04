@@ -1,0 +1,11 @@
+
+new ack, log(`rho:io:stdout`) in
+{
+  for (@msg <= ack) {
+    log!("[PROOF CLIENT v0.1]: " ++ msg)
+  }
+  |
+  @["Proof", "versionName", "CastVote"]!("user002", "False", *ack)
+  |
+  @["Proof", "versionName", "CastVote"]!("user002", "True", *ack)
+}

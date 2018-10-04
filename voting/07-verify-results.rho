@@ -1,0 +1,9 @@
+
+new res, log(`rho:io:stdout`) in
+{
+  for (@msg <= res) {
+    log!(["[PROOF CLIENT v0.1] Results from vote: ", msg])
+  }
+  |
+  @["Proof", "versionName", "VoteResults"]!(*res)
+}

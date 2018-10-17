@@ -1,0 +1,17 @@
+// https://rchain.atlassian.net/wiki/spaces/RHOL/pages/511541342/Name+registry+specification
+
+new return,
+  lookup(`rho:registry:lookup`),
+  stdout(`rho:io:stdout`) in
+{
+  // get the name back
+  lookup!(
+    // this id below is the output from registry-server
+    `rho:id:7gthmkrq46cju8yt9he4tdr6kasq3dkn459eexjtkipdnthyq8k953`,
+    *return
+  )
+  |
+  for (myContract <- return) {
+    myContract!("0.77")
+  }
+}

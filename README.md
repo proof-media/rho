@@ -18,6 +18,21 @@ And in official live zoom session with:
 ### registry
 
 Tested only in standalone mode of latest rnode `v0.7.1`.
-To be completed
+
+`::TO BE COMPLETED::`
+
+NOTE: as of 17/10/2018 the `dev` docker tag image doesn't work while `testing` does.
+
+```bash
+# using compose in rchain-notebook
+# $ docker-compose exec rnode bash
+
+rnode deploy --phlo-limit 100000000 --phlo-price 1 \
+    /opt/contracts/registry/registry-server.rho \
+    && rnode deploy --phlo-limit 100000000 --phlo-price 1 \
+    /opt/contracts/registry/registry-client.rho \
+    && rnode propose
+
+```
 
 

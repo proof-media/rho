@@ -1,0 +1,20 @@
+// https://rchain.atlassian.net/wiki/spaces/RHOL/pages/511541342/Name+registry+specification
+
+new ProofVoteContract,
+  register(`rho:registry:insertArbitrary`),
+  stdout(`rho:io:stdout`), log in
+{
+  // register the name
+  register!(bundle+{*ProofVoteContract}, Nil)
+  |
+  contract ProofVoteContract(@version) = {
+    log!("Deploying main voting contracts *** ^_^/  ") |
+    // logging function with specific version
+    contract log(@string) = {
+      stdout!("[PROOF - v" ++ version ++ "] " ++ string)
+    }
+  }
+
+  // what to do later for all methods
+  // contract PackageManager(@"newPackage", @packageName, return) = {
+}

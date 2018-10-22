@@ -1,0 +1,15 @@
+
+new newName, ack,
+  register(`rho:registry:insertArbitrary`), stdout(`rho:io:stdout`)
+  in
+{
+  register!(bundle+{*newName}, *ack)
+  |
+  contract newName(@msg) = {
+    stdout!("I was called:" ++ msg)
+  }
+  |
+  for (@msg <- ack) {
+    stdout!(["From registry: ", msg])
+  }
+}
